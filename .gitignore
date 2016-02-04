@@ -1,0 +1,11 @@
+# Ignore project directories and bytecode files
+*venv*
+*.pyc
+*.pyo
+*.sublime*
+
+# Want to ignore any test files, might improve this later
+*.html
+*.htm
+*.css
+*.pdf
