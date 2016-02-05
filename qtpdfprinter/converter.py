@@ -7,7 +7,7 @@ from PySide.QtGui import QPrinter
 
 
 def convert_html_to_pdf(source, destination, page_size=QPrinter.Letter,
-        print_format=QPrinter.PdfFormat, app=None):
+        print_format=QPrinter.PdfFormat, timeout=10000, app=None):
     """Converts an .html file at the source to a .pdf at the destination
 
     Any external files linked in the source file must be paths relative to
@@ -35,7 +35,7 @@ def convert_html_to_pdf(source, destination, page_size=QPrinter.Letter,
 
     # We want to ensure the page was fully loaded before printing, so
     # we wait for the loadFinished event to fire.
-    with wait_for_signal(view.loadFinished):
+    with wait_for_signal(view.loadFinished, timeout=timeout):
         view.load(QUrl.fromLocalFile(source))
 
     # With the QWebView loaded, we now print to the destination PDF
@@ -85,35 +85,3 @@ def rel_path(src, dest):
         os.path.abspath(dest),
         os.path.abspath(src),
     )
-
-
-# ==========================================================================
-# Everything below here is reference from a previous iteration of this
-# module that I am cleaning up and rewriting
-
-def render_template(template_file, **kwargs):
-    template = env.get_template(template_file)
-    return template.render(**kwargs)
-
-
-def main():
-    parser = argparse.ArgumentParser(description='Creates a pdf from an html file')
-    parser.add_argument('file', type=str, help='Path to the html file')
-    args = parser.parse_args()
-
-    infile = args.file
-    outfile = os.path.join(os.getcwd(), os.path.basename(os.path.splitext(infile)[0] + '.pdf'))
-
-    html = render_template(
-        os.path.basename(infile),
-        # table=table,
-    )
-
-    print(__file__)
-    print(rel_path(os.environ['TEMP'], __file__))
-
-    # print_pdf(os.path.abspath(infile), outfile)
-
-
-if __name__ == "__main__":
-    main()
