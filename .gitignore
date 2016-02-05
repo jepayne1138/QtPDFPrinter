@@ -9,3 +9,6 @@
 *.htm
 *.css
 *.pdf
+
+# Builld
+*egg-info/
