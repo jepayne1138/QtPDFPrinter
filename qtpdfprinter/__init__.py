@@ -1,2 +1,0 @@
-from qtpdfprinter.converter import convert_html_to_pdf
-from qtpdfprinter.command_handler import process_commands

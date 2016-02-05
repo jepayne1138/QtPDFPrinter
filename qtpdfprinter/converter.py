@@ -8,7 +8,8 @@ from PySide.QtWebKit import QWebView
 from PySide.QtGui import QPrinter, QApplication
 
 
-def convert_html_to_pdf(source, destination, page_size=QPrinter.Letter,
+def convert_html_to_pdf(
+        source, destination, page_size=QPrinter.Letter,
         print_format=QPrinter.PdfFormat, timeout=10000, app=None):
     """Converts an .html file at the source to a .pdf at the destination
 
@@ -77,14 +78,6 @@ def wait_for_signal(signal, timeout=10000):
     # there is no blocking calls in the with block.
     yield
 
-    if timeout is None:  # Not False as possible 0ms timeout would be False
+    if timeout is not None:  # Not False as possible 0ms timeout would be False
         QTimer.singleShot(timeout, loop.quit)
     loop.exec_()
-
-
-def rel_path(src, dest):
-    """Returns a relative path from the source to the destination file"""
-    return os.path.relpath(
-        os.path.abspath(dest),
-        os.path.abspath(src),
-    )

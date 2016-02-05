@@ -1,6 +1,5 @@
 import argparse
-import os
-import qtpdfprinter.converter as converter
+import qtpdfprinter.templating as templating
 
 
 def parse_arguments():
@@ -14,10 +13,13 @@ def parse_arguments():
         'source', type=str,
         help='Path to the source HTML file',
     )
-
     parser.add_argument(
         'destination', type=str,
         help='Path to the destination PDF file'
+    )
+    parser.add_argument(
+        '-l', '--link', type=str,
+        help='Path to the external links directory'
     )
 
     # Parse and return arguments
@@ -29,4 +31,6 @@ def process_commands():
     # Parse and handle each different command
     args = parse_arguments()
 
-    converter.convert_html_to_pdf(args.source, args.destination)
+    templating.convert_template_to_pdf(
+        args.source, args.destination, base_dir=args.link,
+    )
