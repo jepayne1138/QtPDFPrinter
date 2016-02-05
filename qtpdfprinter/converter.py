@@ -1,9 +1,11 @@
 """Used to convert an .html file or raw HTML to a PDF"""
 
+import sys
+import os
 from contextlib import contextmanager
-from PySide.QtCore import QApplication, QEventLoop, QTimer, QUrl
+from PySide.QtCore import QEventLoop, QTimer, QUrl
 from PySide.QtWebKit import QWebView
-from PySide.QtGui import QPrinter
+from PySide.QtGui import QPrinter, QApplication
 
 
 def convert_html_to_pdf(source, destination, page_size=QPrinter.Letter,
@@ -29,14 +31,15 @@ def convert_html_to_pdf(source, destination, page_size=QPrinter.Letter,
     parameter.
     """
     if app is None:
-        app = QApplication()  # Shouldn't need sys.argv
+        app = QApplication(sys.argv)
 
     view = QWebView()
 
     # We want to ensure the page was fully loaded before printing, so
     # we wait for the loadFinished event to fire.
     with wait_for_signal(view.loadFinished, timeout=timeout):
-        view.load(QUrl.fromLocalFile(source))
+        # QUrl requires absolute path names
+        view.load(QUrl.fromLocalFile(os.path.abspath(source)))
 
     # With the QWebView loaded, we now print to the destination PDF
     printer = QPrinter()
@@ -74,7 +77,7 @@ def wait_for_signal(signal, timeout=10000):
     # there is no blocking calls in the with block.
     yield
 
-    is timeout is None:  # Not False as possible 0ms timeout would be False
+    if timeout is None:  # Not False as possible 0ms timeout would be False
         QTimer.singleShot(timeout, loop.quit)
     loop.exec_()
 

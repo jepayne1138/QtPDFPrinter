@@ -15,7 +15,7 @@ def parse_arguments():
         help='Path to the source HTML file',
     )
 
-    parse.add_argument(
+    parser.add_argument(
         'destination', type=str,
         help='Path to the destination PDF file'
     )
